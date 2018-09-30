@@ -22,8 +22,8 @@
         :message "Error while adding user"}))))
 
 (defn register! [{:keys [session]} user]
-  (if (registration-errors user)
-    (response/precondition-failed {:result :error})
+  (if-let [errors (registration-errors user)]
+    (response/precondition-failed {:result errors})
     (try
       (db/create-user!
        (-> user

@@ -13,7 +13,8 @@
                 :handler
                 #(do
                    (session/put! :identity (:id @fields))
-                   (reset! fields {}))
+                   (reset! fields {})
+                   (session/remove! :modal))
                 :error-handler
                 #(reset! errors
                          {:server-error (get-in % [:response :message])})})))

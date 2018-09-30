@@ -7,7 +7,7 @@
 
 (defn handle-registration-error [e]
   (if (and
-       (instance? java.sql.SQLException e)
+       (instance? java.sql.BatchUpdateException  e)
        (-> e
            (.getNextException)
            (.getMessage)
@@ -20,7 +20,7 @@
       (log/error e)
       (response/internal-server-error
        {:result :error
-        :message "Error while adding user"}))))
+        :message "Error while adding user!"}))))
 
 (defn register! [{:keys [session]} user]
   (if-let [errors (registration-errors user)]

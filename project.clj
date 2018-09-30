@@ -24,6 +24,7 @@
                  [org.clojure/clojure "1.9.0"]
                  [org.clojure/clojurescript "1.10.339" :scope "provided"]
                  [reagent "0.8.1"]
+                 [reagent-utils "0.3.1"]
                  [secretary "1.2.3"]
                  [cljs-ajax "0.7.4"]
                  [baking-soda "0.2.0"

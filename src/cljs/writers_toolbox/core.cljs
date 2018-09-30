@@ -9,6 +9,7 @@
             [ajax.core :refer [GET POST]]
             [writers-toolbox.components.common :as common]
             [writers-toolbox.components.registration :as reg]
+            [writers-toolbox.components.authentication :as auth]
             [secretary.core :as secretary :include-macros true])
   (:import goog.History))
 
@@ -30,9 +31,12 @@
     [:ul.nav.navbar-nav.pull-xs-right
      [:li.nav-item
       [:a.dropdown-item.btn
-       {:on-click #(session/remove! :identity)}
+       {:on-click #(POST "/logout"
+                              {:handler
+                               (fn [] (session/remove! :identity))})}
        [:i.fa.fa-user] " " id " | Sign Out"]]]
     [:ul.nav.navbar-nav.pull-xs-right
+     [:li.nav-item [auth/login-button]]
      [:li.nav-item [reg/registration-button]]]))
 
 (defn navbar []

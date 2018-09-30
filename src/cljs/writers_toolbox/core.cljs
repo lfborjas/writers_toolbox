@@ -111,6 +111,6 @@
 
 (defn init! []
   (ajax/load-interceptors!)
-  ;(fetch-docs!)
   (hook-browser-navigation!)
+  (session/put! :identity js/identity)
   (mount-components))

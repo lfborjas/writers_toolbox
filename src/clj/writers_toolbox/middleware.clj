@@ -15,7 +15,8 @@
             [buddy.auth.middleware :refer [wrap-authentication wrap-authorization]]
             [buddy.auth.accessrules :refer [restrict]]
             [buddy.auth :refer [authenticated?]]
-            [buddy.auth.backends.session :refer [session-backend]])
+            [buddy.auth.backends.session :refer [session-backend]]
+            [writers-toolbox.layout :refer [*identity*]])
   (:import 
            [org.joda.time ReadableInstant]))
 
@@ -54,9 +55,15 @@
   (restrict handler {:handler authenticated?
                      :on-error on-error}))
 
+(defn wrap-identity [handler]
+  (fn [request]
+    (binding [*identity* (get-in request [:session :identity])]
+      (handler request))))
+
 (defn wrap-auth [handler]
   (let [backend (session-backend)]
     (-> handler
+        wrap-identity
         (wrap-authentication backend)
         (wrap-authorization backend))))
 

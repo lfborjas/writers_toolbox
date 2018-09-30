@@ -20,5 +20,4 @@
 
 (defn all-messages [error-map]
   (clojure.string/join
-   ", "
-   (map (fn [c] (str (name (key c)) ": " (val c))) error-map)))
+   ", " (map val error-map)))

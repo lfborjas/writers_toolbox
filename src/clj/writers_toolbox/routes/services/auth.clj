@@ -6,16 +6,19 @@
             [clojure.tools.logging :as log]))
 
 (defn handle-registration-error [e]
-  (if (and
-       (instance? java.sql.BatchUpdateException  e)
-       (-> e
-           (.getNextException)
-           (.getMessage)
-           ;;TODO: this isn't working, it may be that the example in the ook expects different behavior
-           (.startsWith "ERROR: duplicate key value")))
+  (if (-> e
+          ;; the book advocates for checking this is a SQLException
+          ;; but .getCause seems to do this better (calling .getNextExc
+          ;; without .getCause raises a further exception since
+          ;; java.lang.Exception doesn't have that method
+          ;; see: https://stackoverflow.com/questions/7134454/clojure-how-do-i-access-sqlexception-from-a-clojure-leiningen-project#comment8553973_7134621
+          (.getCause)
+          (.getNextException)
+          (.getMessage)
+          (.startsWith "ERROR: duplicate key value"))
     (response/precondition-failed
      {:result :error
-      :message "User with the selected ID already exists"})
+      :message "Username already exists"})
     (do
       (log/error e)
       (response/internal-server-error

@@ -16,4 +16,4 @@
            :message "Password and confirmation must match"]]})
 
 (defn registration-errors [{:keys [pass-confirm] :as params}]
-  (st/validate! params registration-schema))
+  (first (st/validate params registration-schema)))

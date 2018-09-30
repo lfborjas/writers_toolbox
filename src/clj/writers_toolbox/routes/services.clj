@@ -46,6 +46,16 @@
         :body [user UserRegistration]
         :summary "Register a new user"
         (auth/register! req user))
+
+  (POST "/login" req
+        :header-params [authorization :- String]
+        :summary "Sign in, create a session"
+        :return Result
+        (auth/login! req authorization))
+  (POST "/logout" []
+        :summary "Destroy user session"
+        :return Result
+        (auth/logout!))
   ; this was already here, as part of the generation
   (GET "/authenticated" []
        :auth-rules authenticated?

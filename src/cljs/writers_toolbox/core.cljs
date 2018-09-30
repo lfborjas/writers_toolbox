@@ -6,6 +6,8 @@
             [markdown.core :refer [md->html]]
             [writers-toolbox.ajax :as ajax]
             [ajax.core :refer [GET POST]]
+            [writers-toolbox.components.common :as common]
+            [writers-toolbox.components.registration :as reg]
             [secretary.core :as secretary :include-macros true])
   (:import goog.History))
 
@@ -29,7 +31,7 @@
     [b/Navbar {:light true
                :class-name "navbar-dark bg-primary"
                :expand "md"}
-     [b/NavbarBrand {:href "/"} "<<name>>"]
+     [b/NavbarBrand {:href "/"} "Writer's Toolbox"]
      [b/NavbarToggler {:on-click #(swap! expanded? not)}]
      [b/Collapse {:is-open @expanded? :navbar true}
       [b/Nav {:class-name "mr-auto" :navbar true}
@@ -54,7 +56,9 @@
    :about #'about-page})
 
 (defn page []
-  [(pages (:page @session))])
+  [:div
+   [reg/registration-form]
+   [(pages (:page @session))]])
 
 ;; -------------------------
 ;; Routes
@@ -89,6 +93,6 @@
 
 (defn init! []
   (ajax/load-interceptors!)
-  (fetch-docs!)
+  ;(fetch-docs!)
   (hook-browser-navigation!)
   (mount-components))

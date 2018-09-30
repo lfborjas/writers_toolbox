@@ -1,5 +1,6 @@
 (ns writers-toolbox.routes.services
-  (:require [ring.util.http-response :refer :all]
+  (:require [writers-toolbox.routes.services.auth :as auth]
+            [ring.util.http-response :refer :all]
             [compojure.api.sweet :refer :all]
             [schema.core :as s]
             [compojure.api.meta :refer [restructure-param]]
@@ -21,12 +22,24 @@
   [_ binding acc]
   (update-in acc [:letks] into [binding `(:identity ~'+compojure-api-request+)]))
 
+(s/defschema UserRegistration
+  {:id String
+   :pass String
+   :pass-confirm String
+   :first_name String
+   :last_name String
+   :email String})
+
+(s/defschema Result
+  {:result s/Keyword
+   (s/optional-key :message) String})
+
 (defapi service-routes
   {:swagger {:ui "/swagger-ui"
              :spec "/swagger.json"
              :data {:info {:version "1.0.0"
-                           :title "Sample API"
-                           :description "Sample Services"}}}}
+                           :title "Writer's Toolbox API"
+                           :description "Public Services"}}}}
   
   (GET "/authenticated" []
        :auth-rules authenticated?

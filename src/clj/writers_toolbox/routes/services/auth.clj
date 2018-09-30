@@ -1,6 +1,6 @@
 (ns writers-toolbox.routes.services.auth
   (:require [writers-toolbox.db.core :as db]
-            [writers-toolbox.validation :refer [registration-errors]]
+            [writers-toolbox.validation :refer [registration-errors all-messages]]
             [ring.util.http-response :as response]
             [buddy.hashers :as hashers]
             [clojure.tools.logging :as log]))
@@ -11,6 +11,7 @@
        (-> e
            (.getNextException)
            (.getMessage)
+           ;;TODO: this isn't working, it may be that the example in the ook expects different behavior
            (.startsWith "ERROR: duplicate key value")))
     (response/precondition-failed
      {:result :error
@@ -23,7 +24,8 @@
 
 (defn register! [{:keys [session]} user]
   (if-let [errors (registration-errors user)]
-    (response/precondition-failed {:result errors})
+    (response/precondition-failed {:result :error
+                                   :message (all-messages errors)})
     (try
       (db/create-user!
        (-> user

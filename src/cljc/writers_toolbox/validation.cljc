@@ -17,3 +17,8 @@
 
 (defn registration-errors [{:keys [pass-confirm] :as params}]
   (first (st/validate params registration-schema)))
+
+(defn all-messages [error-map]
+  (clojure.string/join
+   ", "
+   (map (fn [c] (str (name (key c)) ": " (val c))) error-map)))

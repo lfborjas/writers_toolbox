@@ -1,8 +1,7 @@
 # writers-toolbox
 
-generated using Luminus version "3.10.1"
+Miscellaneous tools to help with the administrivia of writing projects.
 
-FIXME
 
 ## Prerequisites
 
@@ -23,6 +22,9 @@ To get clojurescript compilation going, run
 Since you often need to do both, I recommend split panes in tmux to keep an eye on both.
 
 ## Development with Emacs
+
+`generated using Luminus version "3.10.1"`
+
 
 I assume emacs use up in here, buddy. You probably are used to use Cider.
 I have bad news for you: Luminus, Emacs 24 and cider don't play well. There's a new version of Cider that [doesn't need black magic](https://github.com/clojure-emacs/cider/blob/master/doc/installation.md#ciders-nrepl-middleware) and fasting to work with luminus (see: https://github.com/luminus-framework/luminus-template/pull/376/files). However, to install that version, it looks like one needs emacs 25. I have 24. 

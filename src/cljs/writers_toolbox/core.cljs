@@ -1,6 +1,8 @@
 (ns writers-toolbox.core
   (:require [baking-soda.core :as b]
             [reagent.core :as r]
+            ;;TODO: this is no longer used in luminus
+            [reagent.session :as state]
             [goog.events :as events]
             [goog.history.EventType :as HistoryEventType]
             [markdown.core :refer [md->html]]
@@ -26,6 +28,16 @@
      :active (when (= page (:page @session)) "active")}
     title]])
 
+(defn user-menu []
+  (if-let [id (state/get :identity)]
+    [:ul.nav.navbar-nav.pull-xs-right
+     [:li.nav-item
+      [:a.dropdown-item.btn
+       {:on-click #(state/remove! :identity)}
+       [:i.fa.fa-user] " " id " | Sign Out"]]]
+    [:ul.nav.navbar-nav.pull-xs-right
+     [:li.nav-item [reg/registration-button]]]))
+
 (defn navbar []
   (r/with-let [expanded? (r/atom true)]
     [b/Navbar {:light true
@@ -36,7 +48,8 @@
      [b/Collapse {:is-open @expanded? :navbar true}
       [b/Nav {:class-name "mr-auto" :navbar true}
        [nav-link "#/" "Home" :home]
-       [nav-link "#/about" "About" :about]]]]))
+       [nav-link "#/about" "About" :about]]]
+     [user-menu]]))
 
 (defn about-page []
   [:div.container
@@ -55,9 +68,13 @@
   {:home #'home-page
    :about #'about-page})
 
+(defn modal []
+  (when-let [session-modal (state/get :modal)]
+    [session-modal]))
+
 (defn page []
   [:div
-   [reg/registration-form]
+   [modal]
    [(pages (:page @session))]])
 
 ;; -------------------------

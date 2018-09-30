@@ -7,6 +7,9 @@
             [ring.middleware.anti-forgery :refer [*anti-forgery-token*]]))
 
 
+;; TODO: this is no longer recommended, though I see no rationale as to why:
+;; https://github.com/luminus-framework/luminus-template/commit/3497a0484a1fdcca98779666bdb9a58d487bcf58#diff-9b6d34a327d56e59406581527c310ed3
+(declare ^:dynamic *identity*)
 (parser/set-resource-path!  (clojure.java.io/resource "html"))
 (parser/add-tag! :csrf-field (fn [_ _] (anti-forgery-field)))
 (filters/add-filter! :markdown (fn [content] [:safe (md-to-html-string content)]))
@@ -20,7 +23,8 @@
         template
         (assoc params
           :page template
-          :csrf-token *anti-forgery-token*)))
+          :csrf-token *anti-forgery-token*
+          :identity *identity*)))
     "text/html; charset=utf-8"))
 
 (defn error-page

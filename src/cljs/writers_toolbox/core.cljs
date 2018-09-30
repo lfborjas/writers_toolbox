@@ -1,8 +1,7 @@
 (ns writers-toolbox.core
   (:require [baking-soda.core :as b]
             [reagent.core :as r]
-            ;;TODO: this is no longer used in luminus
-            [reagent.session :as state]
+            [reagent.session :as session]
             [goog.events :as events]
             [goog.history.EventType :as HistoryEventType]
             [markdown.core :refer [md->html]]
@@ -10,10 +9,9 @@
             [ajax.core :refer [GET POST]]
             [writers-toolbox.components.common :as common]
             [writers-toolbox.components.registration :as reg]
+            [writers-toolbox.components.authentication :as auth]
             [secretary.core :as secretary :include-macros true])
   (:import goog.History))
-
-(defonce session (r/atom {:page :home}))
 
 ; the navbar components are implemented via baking-soda [1]
 ; library that provides a ClojureScript interface for Reactstrap [2]
@@ -25,17 +23,20 @@
   [b/NavItem
    [b/NavLink
     {:href   uri
-     :active (when (= page (:page @session)) "active")}
+     :active (when (= page (session/get :page)) "active")}
     title]])
 
 (defn user-menu []
-  (if-let [id (state/get :identity)]
+  (if-let [id (session/get :identity)]
     [:ul.nav.navbar-nav.pull-xs-right
      [:li.nav-item
       [:a.dropdown-item.btn
-       {:on-click #(state/remove! :identity)}
+       {:on-click #(POST "/logout"
+                              {:handler
+                               (fn [] (session/remove! :identity))})}
        [:i.fa.fa-user] " " id " | Sign Out"]]]
     [:ul.nav.navbar-nav.pull-xs-right
+     [:li.nav-item [auth/login-button]]
      [:li.nav-item [reg/registration-button]]]))
 
 (defn navbar []
@@ -59,7 +60,7 @@
 
 (defn home-page []
   [:div.container
-   (when-let [docs (:docs @session)]
+   (when-let [docs (session/get :docs)]
      [:div.row>div.col-sm-12
       [:div {:dangerouslySetInnerHTML
              {:__html (md->html docs)}}]])])
@@ -69,13 +70,13 @@
    :about #'about-page})
 
 (defn modal []
-  (when-let [session-modal (state/get :modal)]
+  (when-let [session-modal (session/get :modal)]
     [session-modal]))
 
 (defn page []
   [:div
    [modal]
-   [(pages (:page @session))]])
+   [(pages (session/get :page))]])
 
 ;; -------------------------
 ;; Routes
@@ -83,10 +84,10 @@
 (secretary/set-config! :prefix "#")
 
 (secretary/defroute "/" []
-  (swap! session assoc :page :home))
+  (session/put! :page :home))
 
 (secretary/defroute "/about" []
-  (swap! session assoc :page :about))
+  (session/put! :page :about))
 
 ;; -------------------------
 ;; History
@@ -102,7 +103,7 @@
 ;; -------------------------
 ;; Initialize app
 (defn fetch-docs! []
-  (GET "/docs" {:handler #(swap! session assoc :docs %)}))
+  (GET "/docs" {:handler #(session/put! :docs %)}))
 
 (defn mount-components []
   (r/render [#'navbar] (.getElementById js/document "navbar"))
@@ -110,6 +111,6 @@
 
 (defn init! []
   (ajax/load-interceptors!)
-  ;(fetch-docs!)
   (hook-browser-navigation!)
+  (session/put! :identity js/identity)
   (mount-components))

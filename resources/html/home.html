@@ -39,7 +39,8 @@
     {% script "/assets/bootstrap/js/bootstrap.min.js" %}
 
     <script type="text/javascript">
-        var csrfToken = "{{csrf-token}}";
+      var csrfToken = "{{csrf-token}}";
+      var identity = {{identity|json|safe}};
     </script>
     {% script "/js/app.js" %}
   </body>

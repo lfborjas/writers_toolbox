@@ -1,6 +1,6 @@
 # writers-toolbox
 
-Miscellaneous tools to help with the administrivia of writing projects.
+Miscellaneous tools to help with the administrivia of creative writing projects (e.g. keep track of word goals like in [NaNoWriMo](https://nanowrimo.org/participants/lfborjas/novels/errante-1188140/stats))
 
 
 ## Prerequisites
@@ -32,6 +32,8 @@ Based on the relatively usable but already outdated tutorial in Chapter 8 of [We
 
 One very neat thing about this Luminus template I used here is that it ships with a very full featured Swagger UI, which actually is able to interact with the code:
 
+![image](https://user-images.githubusercontent.com/82133/46264211-f57e8880-c4e7-11e8-936b-77e864e2dee4.png)
+
 
 Protip: to be able to authenticate, you'll need to send a Base64-encoded `Authorization` header. Here's a cheap function that can generate it:
 
@@ -45,6 +47,9 @@ writers-toolbox.routes.services.auth=> (defn creds [u p]
 writers-toolbox.routes.services.auth=> (creds "lady" "12341234")
 "Basic bGFkeToxMjM0MTIzNA=="
 ```
+
+![image](https://user-images.githubusercontent.com/82133/46264217-04fdd180-c4e8-11e8-84df-ea609135c782.png)
+
 
 
 ### Emacs

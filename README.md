@@ -21,9 +21,34 @@ To get clojurescript compilation going, run
     
 Since you often need to do both, I recommend split panes in tmux to keep an eye on both.
 
-## Development with Emacs
+
+## Development
 
 `generated using Luminus version "3.10.1"`
+
+Based on the relatively usable but already outdated tutorial in Chapter 8 of [Web Development with Clojure, 2nd Edition](https://pragprog.com/book/dswdcloj2/web-development-with-clojure-second-edition), written by [one](http://yogthos.net/posts/2016-01-01-ClojureWebDev2.html) of the [core maintainers of Luminus](https://github.com/luminus-framework/luminus-template/commits?author=yogthos). Read the commit log for instances where I had to reverse-engineer the intended functionality--can't say I didn't learn a thing or two about how fast the Luminus maintainers learn and their zeal to keep things clean! (Removing dependencies on CIDER, `reagent-utils` and the global `*identity*` come to mind: annoying to have to re-create, good to know they didn't hesitate to move on from those antipatterns).
+
+### Swagger UI
+
+One very neat thing about this Luminus template I used here is that it ships with a very full featured Swagger UI, which actually is able to interact with the code:
+
+
+Protip: to be able to authenticate, you'll need to send a Base64-encoded `Authorization` header. Here's a cheap function that can generate it:
+
+```clojure
+writers-toolbox.routes.services.auth=> (defn creds [u p] 
+  (str "Basic " 
+      (.encodeToString 
+          (java.util.Base64/getEncoder) 
+          (.getBytes (str u ":" p)))))
+#'writers-toolbox.routes.services.auth/creds
+writers-toolbox.routes.services.auth=> (creds "lady" "12341234")
+"Basic bGFkeToxMjM0MTIzNA=="
+```
+
+
+### Emacs
+
 
 
 I assume emacs use up in here, buddy. You probably are used to use Cider.

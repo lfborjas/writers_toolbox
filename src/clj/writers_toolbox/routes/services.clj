@@ -49,7 +49,7 @@
 
   (POST "/login" req
         :header-params [authorization :- String]
-        :summary "Sign in, create a session"
+        :summary "Sign in, create a session (takes a Base64 encoded pair of user:pass)"
         :return Result
         (auth/login! req authorization))
   (POST "/logout" []

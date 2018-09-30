@@ -5,6 +5,19 @@
             [writers-toolbox.validation :refer [registration-errors]]
             [writers-toolbox.components.common :as c]))
 
+(defn register! [fields errors]
+  (reset! errors (registration-errors @fields))
+  (when-not @errors
+    (ajax/POST "/register"
+               {:params @fields
+                :handler
+                #(do
+                   (session/put! :identity (:id @fields))
+                   (reset! fields {}))
+                :error-handler
+                #(reset! errors
+                         {:server-error (get-in % [:response :message])})})))
+
 (defn registration-form []
   (let [fields (atom {})
         error (atom nil)]
@@ -19,6 +32,8 @@
         [c/text-input "Last Name" :last_name "last name" fields]
         [c/text-input "Email" :email "email" fields]
         [c/password-input "Password" :pass "enter a password" fields]
+        (when-let [error (:pass @error)]
+          [:div.alert.alert-danger error])
         [c/password-input "Confirm password"
          :pass-confirm "re-enter the password" fields]
         (when-let [error (:server-error @error)]
@@ -27,17 +42,8 @@
         [:button.btn.btn-primary
          {:on-click #(register! fields error)}
          "Register"]
-        [:button.btn.btn-danger "Cancel"]]])))
+        [:button.btn.btn-danger
+         {:on-click #(session/remove! :modal)}
+         "Cancel"]]])))
 
-(defn register! [fields errors]
-  (reset! errors (registration-errors @fields))
-  (when-not @errors
-    (ajax/POST "/register"
-               {:params @fields
-                :handler
-                #(do
-                   (session/put! :identity (:id @fields))
-                   (reset! fields {}))
-                :error-handler
-                #(reset! errors
-                         {:server-error (get-in % [:response :message])})})))
+

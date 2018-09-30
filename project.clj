@@ -23,6 +23,15 @@
                  [nrepl "0.4.5"]
                  [org.clojure/clojure "1.9.0"]
                  [org.clojure/clojurescript "1.10.339" :scope "provided"]
+                 [reagent "0.8.1"]
+                 [reagent-utils "0.3.1"]
+                 [secretary "1.2.3"]
+                 [cljs-ajax "0.7.4"]
+                 [baking-soda "0.2.0"
+                  :exclusions
+                  [cljsjs/react-bootstrap]]
+                 [cljsjs/react-transition-group "2.4.0-0"]
+                 [cljsjs/react-popper "0.10.4-0"]
                  [org.clojure/tools.cli "0.4.0"]
                  [org.clojure/tools.logging "0.4.1"]
                  [org.postgresql/postgresql "42.2.4"]

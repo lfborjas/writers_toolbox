@@ -2,6 +2,9 @@
 
 Miscellaneous tools to help with the administrivia of creative writing projects (e.g. keep track of word goals like in [NaNoWriMo](https://nanowrimo.org/participants/lfborjas/novels/errante-1188140/stats))
 
+Check out the public API docs at http://writers-toolbox.herokuapp.com/swagger-ui/index.html
+Or the actual website (a single-page app written in React with Clojurescript's Reagent): http://writers-toolbox.herokuapp.com/
+
 
 ## Prerequisites
 
